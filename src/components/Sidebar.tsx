@@ -142,7 +142,7 @@ const Sidebar: React.FC = () => {
                 transition={{ duration: 0.6 }}
                 className="w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-500 flex items-center justify-center"
               >
-                <span className="text-white font-bold text-xl">SN</span>
+                <img src="shauryaLogo.jpeg" alt="Logo" />
               </motion.div>
               <AnimatePresence mode="wait">
                 {!isCollapsed && (
