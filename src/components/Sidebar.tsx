@@ -16,6 +16,7 @@ import {
   UserCircleIcon,
   Bars3Icon,
   XMarkIcon,
+  TagIcon,
 } from "@heroicons/react/24/outline";
 
 const Sidebar: React.FC = () => {
@@ -57,6 +58,15 @@ const Sidebar: React.FC = () => {
       subItems: [
         { path: "/create-sender", name: "Create Sender" },
         { path: "/all-senders", name: "All Senders" },
+      ],
+    },
+    {
+      path: "/create-purpose",
+      name: "Templates",
+      icon: TagIcon,
+      subItems: [
+        { path: "/create-purpose", name: "Create Template" },
+        { path: "/all-templates", name: "All Templates" },
       ],
     },
   ];

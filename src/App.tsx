@@ -24,6 +24,7 @@ import { useAppSelector } from "./hooks/redux";
 import CreateSender from "./pages/CreateSender";
 import AllSenders from "./pages/AllSenders";
 import Sidebar from "./components/Sidebar";
+import AllTemplates from "./pages/AllTemplates";
 
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
@@ -150,6 +151,14 @@ const AppContent: React.FC = () => {
             element={
               <ProtectedRoute>
                 <AllSenders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/all-templates"
+            element={
+              <ProtectedRoute>
+                <AllTemplates />
               </ProtectedRoute>
             }
           />
