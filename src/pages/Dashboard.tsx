@@ -225,7 +225,7 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen px-4 lg:px-20 py-8">
+    <div className="min-h-screen px-4 lg:px-20 py-8 lg:ml-[280px]">
       <div className="max-w-8xl mx-auto">
         {/* Header */}
         <DashboardHeader clientName={clientData.Name} />

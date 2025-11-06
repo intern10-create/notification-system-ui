@@ -23,6 +23,7 @@ import { PlusIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useAppSelector } from "./hooks/redux";
 import CreateSender from "./pages/CreateSender";
 import AllSenders from "./pages/AllSenders";
+import AllTemplates from "./pages/AllTemplates";
 import Sidebar from "./components/Sidebar";
 
 const AppContent: React.FC = () => {
@@ -150,6 +151,14 @@ const AppContent: React.FC = () => {
             element={
               <ProtectedRoute>
                 <AllSenders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/all-templates"
+            element={
+              <ProtectedRoute>
+                <AllTemplates />
               </ProtectedRoute>
             }
           />

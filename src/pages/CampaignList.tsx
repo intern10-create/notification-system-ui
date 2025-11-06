@@ -110,27 +110,28 @@ const confirmSchedule = () => {
 
  
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-start px-6 py-10 border-white/10 bg-white/5">
-      {/* 🔹 Loader Overlay */}
-      {actionLoading && (
-<div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm z-50 p-6 rounded-2xl shadow-2xl border border-white/20">          
-<motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="text-white text-lg font-medium text-center space-y-3"
-          >
-            <div className="w-10 h-10 border-4 border-t-purple-400 border-white/20 rounded-full animate-spin mx-auto" />
-            <p>{loadingMessage}</p>
-          </motion.div>
-        </div>
-      )}
- 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="w-full max-w-6xl backdrop-blur-xl border border-white/10 bg-white/5 rounded-2xl shadow-2xl p-8"
-      >
+    <div className="min-h-screen p-6 lg:ml-[280px]">
+      <div className="max-w-7xl mx-auto">
+        {/* Loader Overlay */}
+        {actionLoading && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="bg-white/10 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-white/20 text-white text-center space-y-4"
+            >
+              <div className="w-12 h-12 border-4 border-t-purple-400 border-white/20 rounded-full animate-spin mx-auto" />
+              <p className="text-lg font-medium">{loadingMessage}</p>
+            </motion.div>
+          </div>
+        )}
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="backdrop-blur-xl border border-white/10 bg-white/5 rounded-2xl shadow-2xl p-8"
+        >
         <h2 className="text-3xl font-semibold text-white mb-8 text-center">
           Campaign List
         </h2>
@@ -140,23 +141,23 @@ const confirmSchedule = () => {
         ) : campaigns.length === 0 ? (
           <p className="text-gray-400 text-center">No campaigns found.</p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-sm text-white">
+          <div className="overflow-x-auto rounded-xl">
+            <table className="w-full text-sm text-white">
               <thead>
-                <tr className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 text-gray-300 uppercase text-xs tracking-wide">
-                  <th className="border border-white/10 px-3 py-3 text-left rounded-tl-lg">
+                <tr className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border-b border-white/10">
+                  <th className="px-6 py-4 text-left text-gray-300 font-semibold">
                     Campaign Name
                   </th>
-                  <th className="border border-white/10 px-3 py-3 text-left">
+                  <th className="px-6 py-4 text-left text-gray-300 font-semibold">
                     Status
                   </th>
-                  <th className="border border-white/10 px-3 py-3 text-center">
+                  <th className="px-6 py-4 text-center text-gray-300 font-semibold">
                     Total
                   </th>
-                  <th className="border border-white/10 px-3 py-3 text-center">
+                  <th className="px-6 py-4 text-center text-gray-300 font-semibold">
                     Created
                   </th>
-                  <th className="border border-white/10 px-3 py-3 text-center rounded-tr-lg">
+                  <th className="px-6 py-4 text-center text-gray-300 font-semibold">
                     Actions
                   </th>
                 </tr>
@@ -169,33 +170,35 @@ const confirmSchedule = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.05 }}
-                    className="hover:bg-white/5 transition-all duration-200"
+                    className="hover:bg-white/5 transition-all duration-200 border-b border-white/5"
                   >
-                    <td className="border border-white/10 px-3 py-3 font-medium">
+                    <td className="px-6 py-4 font-medium">
                       {c.Name}
                     </td>
-                    <td className="border border-white/10 px-3 py-3 capitalize">
+                    <td className="px-6 py-4 capitalize">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          c.Status === "completed"
-                            ? "bg-green-500/20 text-green-400"
-                            : c.Status === "pending"
-                            ? "bg-yellow-500/20 text-yellow-400"
-                            : "bg-gray-500/20 text-gray-400"
+                        className={`px-3 py-1 rounded-full text-xs font-semibold border ${
+                          c.Status === "executed"
+                            ? "bg-green-500/20 text-green-400 border-green-500/30"
+                            : c.Status === "scheduled"
+                            ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
+                            : c.Status === "draft"
+                            ? "bg-blue-500/20 text-blue-400 border-blue-500/30"
+                            : "bg-gray-500/20 text-gray-400 border-gray-500/30"
                         }`}
                       >
                         {c.Status}
                       </span>
                     </td>
-                    <td className="border border-white/10 px-3 py-3 text-center">
+                    <td className="px-6 py-4 text-center">
                       {c.TotalCount || 0}
                     </td>
-                    <td className="border border-white/10 px-3 py-3 text-center text-gray-300">
+                    <td className="px-6 py-4 text-center text-gray-300">
                       {c.CreatedAt
                         ? new Date(c.CreatedAt).toLocaleDateString()
                         : "-"}
                     </td>
-                    <td className="border border-white/10 px-3 py-3 text-center space-x-2">
+                    <td className="px-6 py-4 text-center space-x-2">
                       {c.Status === "draft" && (
                         <>
                           <button
@@ -243,8 +246,9 @@ const confirmSchedule = () => {
             </table>
           </div>
         )}
-      </motion.div>
-      {showScheduleModal && (
+        </motion.div>
+
+        {showScheduleModal && (
   <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/40 z-50">
     <div className="w-[480px] p-6 rounded-2xl bg-white/10 border border-white/20 shadow-2xl text-white backdrop-blur-xl">
       <h3 className="text-xl font-semibold mb-4 text-center">
@@ -316,9 +320,8 @@ const confirmSchedule = () => {
 
     </div>
   </div>
-)}
-
-
+        )}
+      </div>
     </div>
   );
 }
