@@ -23,15 +23,16 @@ import { PlusIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useAppSelector } from "./hooks/redux";
 import CreateSender from "./pages/CreateSender";
 import AllSenders from "./pages/AllSenders";
+import Sidebar from "./components/Sidebar";
+import AllTemplates from "./pages/AllTemplates";
 
- 
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
- 
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <AnimatedBackground />
-      {isAuthenticated && <Navbar />}
+      {isAuthenticated && <Sidebar />}
       <AnimatePresence mode="wait">
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -85,45 +86,59 @@ const AppContent: React.FC = () => {
             }
           />
           <Route
-          path="/createcampaign"
-          element={
-            <ProtectedRoute>
-              <CreateCampaign />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/create-campaign" element={<ProtectedRoute><CreateCampaign /></ProtectedRoute>} />
-        {/* <Route path="/upload-campaign" element={<ProtectedRoute><UploadCampaign /></ProtectedRoute>} />  */}
-        <Route path="/campaign-list" element={<ProtectedRoute><CampaignList /></ProtectedRoute>} />
- 
- <Route
-  path="/verify-campaign/:campaignId"
-  element={
-    <ProtectedRoute>
-      <CampaignVerification />
-    </ProtectedRoute>
-  }
-/>
+            path="/createcampaign"
+            element={
+              <ProtectedRoute>
+                <CreateCampaign />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-campaign"
+            element={
+              <ProtectedRoute>
+                <CreateCampaign />
+              </ProtectedRoute>
+            }
+          />
+          {/* <Route path="/upload-campaign" element={<ProtectedRoute><UploadCampaign /></ProtectedRoute>} />  */}
+          <Route
+            path="/campaign-list"
+            element={
+              <ProtectedRoute>
+                <CampaignList />
+              </ProtectedRoute>
+            }
+          />
 
-                 <Route
-  path="/campaign-list"
-  element={
-    <ProtectedRoute>
-      <CampaignList />
-    </ProtectedRoute>
-  }
-/>
+          <Route
+            path="/verify-campaign/:campaignId"
+            element={
+              <ProtectedRoute>
+                <CampaignVerification />
+              </ProtectedRoute>
+            }
+          />
 
-<Route
-  path="/campaign/:id/report"
-  element={
-    <ProtectedRoute>
-      <CampaignReport />
-    </ProtectedRoute>
-  }
-/>
+          <Route
+            path="/campaign-list"
+            element={
+              <ProtectedRoute>
+                <CampaignList />
+              </ProtectedRoute>
+            }
+          />
 
-<Route
+          <Route
+            path="/campaign/:id/report"
+            element={
+              <ProtectedRoute>
+                <CampaignReport />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
             path="/create-sender"
             element={
               <ProtectedRoute>
@@ -132,16 +147,24 @@ const AppContent: React.FC = () => {
             }
           />
           <Route
-              path="/all-senders"
-              element={
-                <ProtectedRoute>
-                  <AllSenders />
-                </ProtectedRoute>
-              }
-            />
+            path="/all-senders"
+            element={
+              <ProtectedRoute>
+                <AllSenders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/all-templates"
+            element={
+              <ProtectedRoute>
+                <AllTemplates />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </AnimatePresence>
- 
+
       {/* Floating Action Buttons - only show when authenticated */}
       {isAuthenticated && (
         <>
@@ -152,7 +175,7 @@ const AppContent: React.FC = () => {
             gradient="from-cyan-500 to-purple-500"
             position="bottom-right"
           />
-          
+
           <FloatingActionButton
             to="/create-campaign"
             icon={<PlusIcon className="w-6 h-6" />}
@@ -160,7 +183,7 @@ const AppContent: React.FC = () => {
             gradient="from-green-400 to-blue-500"
             position="bottom-right"
           />
- 
+
           <FloatingActionButton
             to="/send-sms"
             icon={<PaperAirplaneIcon className="w-6 h-6" />}
@@ -173,7 +196,7 @@ const AppContent: React.FC = () => {
     </div>
   );
 };
- 
+
 function App() {
   return (
     <Provider store={store}>
@@ -185,5 +208,5 @@ function App() {
     </Provider>
   );
 }
- 
+
 export default App;

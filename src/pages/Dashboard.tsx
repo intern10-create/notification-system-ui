@@ -36,50 +36,49 @@ const Dashboard: React.FC = () => {
 
   // Fetch client data
   useEffect(() => {
-  const fetchClientData = async () => {
-    if (!clientId || !token) return;
+    const fetchClientData = async () => {
+      if (!clientId || !token) return;
 
-    dispatch(setLoading(true));
-    try {
-      const response = await fetch(getApiUrl(`/clients/${clientId}`), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      dispatch(setLoading(true));
+      try {
+        const response = await fetch(getApiUrl(`/clients/${clientId}`), {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (data.status === "success") {
-        const client = data.data;
-        dispatch(setClientData(client));
+        if (data.status === "success") {
+          const client = data.data;
+          dispatch(setClientData(client));
 
-        // 🔹 Extract project API keys
-        if (client.Projects && client.Projects.length > 0) {
-          const apiKeys: Record<string, string> = {};
+          // 🔹 Extract project API keys
+          if (client.Projects && client.Projects.length > 0) {
+            const apiKeys: Record<string, string> = {};
 
-          client.Projects.forEach((project: any) => {
-            if (project?.APIKey?.Key) {
-              const idKey = String(project.ID);
-              apiKeys[idKey] = String(project.APIKey.Key);
-            }
-          });
+            client.Projects.forEach((project: any) => {
+              if (project?.APIKey?.Key) {
+                const idKey = String(project.ID);
+                apiKeys[idKey] = String(project.APIKey.Key);
+              }
+            });
 
-          // 🔹 Save all API keys to localStorage
-          localStorage.setItem("api_keys", JSON.stringify(apiKeys));
+            // 🔹 Save all API keys to localStorage
+            localStorage.setItem("api_keys", JSON.stringify(apiKeys));
+          }
+        } else {
+          dispatch(setError(data.message || "Failed to fetch client data"));
         }
-      } else {
-        dispatch(setError(data.message || "Failed to fetch client data"));
+      } catch (error) {
+        console.error("Error fetching client data:", error);
+        dispatch(setError("Failed to fetch client data"));
       }
-    } catch (error) {
-      console.error("Error fetching client data:", error);
-      dispatch(setError("Failed to fetch client data"));
-    }
-  };
+    };
 
-  fetchClientData();
-}, [clientId, token, dispatch]);
-
+    fetchClientData();
+  }, [clientId, token, dispatch]);
 
   // Fetch memberships
   useEffect(() => {
@@ -113,50 +112,48 @@ const Dashboard: React.FC = () => {
   }, [clientId, token, dispatch]);
 
   // ACTIVE SMS PLANS ONLY
-    const activeSMSMemberships = memberships.filter(
-      (m) =>
-        m.Plan?.Channel?.toLowerCase() === "sms" &&
-        m.Status?.toLowerCase() === "active"
-    );
- 
-    const totalSMSQuota = activeSMSMemberships.reduce(
-      (sum, m) => sum + m.QuotaTotal,
-      0
-    );
- 
-    const usedSMSQuota = activeSMSMemberships.reduce(
-      (sum, m) => sum + m.QuotaUsed,
-      0
-    );
- 
-    const remainingSMS = totalSMSQuota - usedSMSQuota;
- 
- 
-    // ACTIVE WHATSAPP PLANS ONLY
-    const activeWhatsAppMemberships = memberships.filter(
-      (m) =>
-        m.Plan?.Channel?.toLowerCase() === "whatsapp" &&
-        m.Status?.toLowerCase() === "active"
-    );
- 
-    const totalWhatsAppQuota = activeWhatsAppMemberships.reduce(
-      (sum, m) => sum + m.QuotaTotal,
-      0
-    );
- 
-    const usedWhatsAppQuota = activeWhatsAppMemberships.reduce(
-      (sum, m) => sum + m.QuotaUsed,
-      0
-    );
- 
-    const remainingWhatsApp = totalWhatsAppQuota - usedWhatsAppQuota;
- 
- 
-    // Total Projects & Active Plans Count (unchanged)
-    const totalProjects = clientData?.Projects?.length || 0;
-    const activePlans = memberships.filter(
-      (m) => m.Status?.toLowerCase() === "active"
-    ).length;
+  const activeSMSMemberships = memberships.filter(
+    (m) =>
+      m.Plan?.Channel?.toLowerCase() === "sms" &&
+      m.Status?.toLowerCase() === "active"
+  );
+
+  const totalSMSQuota = activeSMSMemberships.reduce(
+    (sum, m) => sum + m.QuotaTotal,
+    0
+  );
+
+  const usedSMSQuota = activeSMSMemberships.reduce(
+    (sum, m) => sum + m.QuotaUsed,
+    0
+  );
+
+  const remainingSMS = totalSMSQuota - usedSMSQuota;
+
+  // ACTIVE WHATSAPP PLANS ONLY
+  const activeWhatsAppMemberships = memberships.filter(
+    (m) =>
+      m.Plan?.Channel?.toLowerCase() === "whatsapp" &&
+      m.Status?.toLowerCase() === "active"
+  );
+
+  const totalWhatsAppQuota = activeWhatsAppMemberships.reduce(
+    (sum, m) => sum + m.QuotaTotal,
+    0
+  );
+
+  const usedWhatsAppQuota = activeWhatsAppMemberships.reduce(
+    (sum, m) => sum + m.QuotaUsed,
+    0
+  );
+
+  const remainingWhatsApp = totalWhatsAppQuota - usedWhatsAppQuota;
+
+  // Total Projects & Active Plans Count (unchanged)
+  const totalProjects = clientData?.Projects?.length || 0;
+  const activePlans = memberships.filter(
+    (m) => m.Status?.toLowerCase() === "active"
+  ).length;
 
   // Loading state
   if (loading) {
@@ -225,7 +222,7 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen px-4 lg:px-20 py-8">
+    <div className="min-h-screen px-4 lg:px-20 py-8 lg:ml-[280px]">
       <div className="max-w-8xl mx-auto">
         {/* Header */}
         <DashboardHeader clientName={clientData.Name} />
