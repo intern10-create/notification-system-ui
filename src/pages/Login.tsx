@@ -1,32 +1,37 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../hooks/redux';
-import { loginSuccess } from '../store/slices/authSlice';
-import { getApiUrl } from '../config/api';
-import { LockClosedIcon, UserIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../hooks/redux";
+import { loginSuccess } from "../store/slices/authSlice";
+import { getApiUrl } from "../config/api";
+import {
+  LockClosedIcon,
+  UserIcon,
+  EyeIcon,
+  EyeSlashIcon,
+} from "@heroicons/react/24/outline";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const response = await fetch(getApiUrl('/users/login'), {
-        method: 'POST',
+      const response = await fetch(getApiUrl("/users/login"), {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           emailid: formData.email,
@@ -36,10 +41,10 @@ const Login: React.FC = () => {
 
       const data = await response.json();
 
-      if (response.ok && data.token && data.clientId) {
+      if (response.ok && data.token && (data.clientId || data.role)) {
         // Decode JWT to get user info
-        const tokenPayload = JSON.parse(atob(data.token.split('.')[1]));
-        
+        const tokenPayload = JSON.parse(atob(data.token.split(".")[1]));
+
         const userData = {
           user_id: tokenPayload.user_id,
           email: tokenPayload.email,
@@ -47,33 +52,40 @@ const Login: React.FC = () => {
         };
 
         // Store in localStorage
-        localStorage.setItem('auth_token', data.token);
-        localStorage.setItem('client_id', data.clientId);
-        localStorage.setItem('user_data', JSON.stringify(userData));
-        
-        // Update Redux state
-        dispatch(loginSuccess({
-          token: data.token,
-          clientId: data.clientId,
-          user: userData
-        }));
-        
-        navigate('/dashboard');
-      } else {
-  // Show the actual error message from backend
-      const backendError =
-        data.error || data.message || "Something went wrong. Try again.";
-      setError(backendError);
-}
-    } catch (error: unknown) {
-        console.error("Login error:", error);
+        localStorage.setItem("auth_token", data.token);
+        localStorage.setItem("client_id", data.clientId);
+        localStorage.setItem("user_data", JSON.stringify(userData));
 
-        if (error instanceof Error) {
-          setError(error.message);
+        // Check if user is admin
+        if (data.role && data.role.toLowerCase() === "admin") {
+          localStorage.setItem("user_role", "admin");
+          navigate("/admin/dashboard");
         } else {
-          setError("Login failed. Please check your connection and try again.");
+          // Update Redux state for regular users
+          dispatch(
+            loginSuccess({
+              token: data.token,
+              clientId: data.clientId,
+              user: userData,
+            })
+          );
+          navigate("/dashboard");
         }
+      } else {
+        // Show the actual error message from backend
+        const backendError =
+          data.error || data.message || "Something went wrong. Try again.";
+        setError(backendError);
       }
+    } catch (error: unknown) {
+      console.error("Login error:", error);
+
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("Login failed. Please check your connection and try again.");
+      }
+    }
     setLoading(false);
   };
 
@@ -129,7 +141,9 @@ const Login: React.FC = () => {
                   type="email"
                   required
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                   className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-200"
                   placeholder="Enter your email"
                 />
@@ -143,10 +157,12 @@ const Login: React.FC = () => {
               <div className="relative">
                 <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   required
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   className="w-full pl-10 pr-12 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-200"
                   placeholder="Enter your password"
                 />
@@ -188,7 +204,7 @@ const Login: React.FC = () => {
 
           <div className="mt-6 text-center">
             <p className="text-gray-400">
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <Link
                 to="/register"
                 className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors"

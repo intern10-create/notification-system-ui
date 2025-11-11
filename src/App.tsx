@@ -25,6 +25,10 @@ import CreateSender from "./pages/CreateSender";
 import AllSenders from "./pages/AllSenders";
 import Sidebar from "./components/Sidebar";
 import AllTemplates from "./pages/AllTemplates";
+import AdminLayout from "./components/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import ClientManagement from "./pages/admin/ClientManagement";
+import SubscriptionManagement from "./pages/admin/SubscriptionManagement";
 
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
@@ -162,6 +166,12 @@ const AppContent: React.FC = () => {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="clients" element={<ClientManagement />} />
+            <Route path="subscriptions" element={<SubscriptionManagement />} />
+          </Route>
         </Routes>
       </AnimatePresence>
 
