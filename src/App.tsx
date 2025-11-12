@@ -29,6 +29,8 @@ import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ClientManagement from "./pages/admin/ClientManagement";
 import SubscriptionManagement from "./pages/admin/SubscriptionManagement";
+import CreatePlan from "./pages/admin/CreatePlan";
+import ViewPlans from "./pages/admin/ViewPlans";
 
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
@@ -171,6 +173,8 @@ const AppContent: React.FC = () => {
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="clients" element={<ClientManagement />} />
             <Route path="subscriptions" element={<SubscriptionManagement />} />
+            <Route path="plans" element={<ViewPlans />} />
+            <Route path="create-plan" element={<CreatePlan />} />
           </Route>
         </Routes>
       </AnimatePresence>

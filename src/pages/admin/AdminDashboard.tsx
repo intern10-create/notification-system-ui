@@ -7,6 +7,7 @@ import {
   DocumentTextIcon,
   CheckCircleIcon,
   ClockIcon,
+  SparklesIcon,
 } from "@heroicons/react/24/outline";
 import { API_CONFIG } from "../../config/api";
 
@@ -17,6 +18,7 @@ interface DashboardStats {
   totalMemberships: number;
   activeMemberships: number;
   requestedMemberships: number;
+  totalPlans: number;
 }
 
 const AdminDashboard: React.FC = () => {
@@ -28,6 +30,7 @@ const AdminDashboard: React.FC = () => {
     totalMemberships: 0,
     activeMemberships: 0,
     requestedMemberships: 0,
+    totalPlans: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -39,17 +42,21 @@ const AdminDashboard: React.FC = () => {
     try {
       const token = localStorage.getItem("auth_token");
 
-      const [clientsRes, membershipsRes] = await Promise.all([
+      const [clientsRes, membershipsRes, plansRes] = await Promise.all([
         fetch(`${API_CONFIG.BASE_URL}/clients/list/all`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
         fetch(`${API_CONFIG.BASE_URL}/membership/get/all`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
+        fetch(`${API_CONFIG.BASE_URL}/plans`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
       ]);
 
       const clientsData = await clientsRes.json();
       const membershipsData = await membershipsRes.json();
+      const plansData = await plansRes.json();
 
       if (clientsData.status === "success") {
         const clients = clientsData.data || [];
@@ -72,6 +79,14 @@ const AdminDashboard: React.FC = () => {
           requestedMemberships: memberships.filter(
             (m: any) => m.Status?.toLowerCase() === "requested"
           ).length,
+        }));
+      }
+
+      if (plansData.status === "success") {
+        const plans = plansData.data || [];
+        setStats((prev) => ({
+          ...prev,
+          totalPlans: plans.length,
         }));
       }
     } catch (error) {
@@ -123,6 +138,13 @@ const AdminDashboard: React.FC = () => {
       icon: <ClockIcon className="w-8 h-8 text-white" />,
       gradient: "from-yellow-500 to-orange-500",
       onClick: () => navigate("/admin/subscriptions?filter=requested"),
+    },
+    {
+      title: "Total Plans",
+      value: stats.totalPlans,
+      icon: <SparklesIcon className="w-8 h-8 text-white" />,
+      gradient: "from-amber-500 to-orange-500",
+      onClick: () => navigate("/admin/plans"),
     },
   ];
 
@@ -187,7 +209,7 @@ const AdminDashboard: React.FC = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -221,6 +243,22 @@ const AdminDashboard: React.FC = () => {
             </p>
             <button className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:opacity-90 transition-all">
               View All Subscriptions
+            </button>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            onClick={() => navigate("/admin/plans")}
+            className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 cursor-pointer hover:bg-white/10 transition-all"
+          >
+            <h2 className="text-xl font-bold text-white mb-4">Manage Plans</h2>
+            <p className="text-gray-400 mb-4">
+              Create and manage messaging plans
+            </p>
+            <button className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg hover:opacity-90 transition-all">
+              View All Plans
             </button>
           </motion.div>
         </div>

@@ -6,6 +6,7 @@ import {
   UsersIcon,
   DocumentTextIcon,
   ArrowRightOnRectangleIcon,
+  SparklesIcon,
 } from "@heroicons/react/24/outline";
 import { useAppDispatch } from "../hooks/redux";
 import { logout } from "../store/slices/authSlice";
@@ -40,6 +41,11 @@ const AdminLayout: React.FC = () => {
       path: "/admin/subscriptions",
       name: "Subscriptions",
       icon: <DocumentTextIcon className="w-5 h-5" />,
+    },
+    {
+      path: "/admin/plans",
+      name: "Plans",
+      icon: <SparklesIcon className="w-5 h-5" />,
     },
   ];
 
