@@ -5,6 +5,7 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
+import { API_CONFIG } from "../config/api";
 
 interface User {
   user_id: string;
@@ -50,19 +51,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/v1/o/users/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            emailid: email,
-            password: password,
-          }),
-        }
-      );
+      const response = await fetch(`${API_CONFIG.BASE_URL}/users/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          emailid: email,
+          password: password,
+        }),
+      });
 
       const data = await response.json();
 

@@ -58,15 +58,30 @@ const Login: React.FC = () => {
 
         // Check if user is admin
         if (data.role && data.role.toLowerCase() === "admin") {
-          localStorage.setItem("user_role", "admin");
-          navigate("/admin/dashboard");
-        } else {
-          // Update Redux state for regular users
+          localStorage.setItem("user_role", "ADMIN");
           dispatch(
             loginSuccess({
               token: data.token,
               clientId: data.clientId,
               user: userData,
+              isAuthenticated: true,
+              loading: false,
+              role: data.role,
+            })
+          );
+          navigate("/admin/dashboard");
+        } else {
+          // Update Redux state for regular users
+          localStorage.setItem("user_role", "CLIENT");
+
+          dispatch(
+            loginSuccess({
+              token: data.token,
+              clientId: data.clientId,
+              user: userData,
+              isAuthenticated: true,
+              loading: false,
+              role: data.role,
             })
           );
           navigate("/dashboard");

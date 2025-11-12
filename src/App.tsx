@@ -33,12 +33,12 @@ import CreatePlan from "./pages/admin/CreatePlan";
 import ViewPlans from "./pages/admin/ViewPlans";
 
 const AppContent: React.FC = () => {
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, role } = useAppSelector((state) => state.auth);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <AnimatedBackground />
-      {isAuthenticated && <Sidebar />}
+      {/* <AnimatedBackground /> */}
+      {isAuthenticated && role !== "ADMIN" && <Sidebar />}
       <AnimatePresence mode="wait">
         <Routes>
           <Route path="/login" element={<Login />} />
