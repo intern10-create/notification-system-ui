@@ -234,26 +234,26 @@ const AdminSidebar: React.FC = () => {
                             className="ml-8 mt-2 space-y-1"
                           >
                             {subItems.map((sub) => (
-                              <button
+                              <motion.div
                                 key={sub.path}
-                                onClick={() => {
-                                  navigate(sub.path);
-                                  setOpenDropdown(null);
-                                  setIsMobileOpen(false);
-                                }}
+                                whileHover={{ scale: 1.02, x: 4 }}
+                                whileTap={{ scale: 0.98 }}
                               >
-                                <motion.div
-                                  whileHover={{ scale: 1.02, x: 4 }}
-                                  whileTap={{ scale: 0.98 }}
-                                  className={`px-4 py-2 rounded-lg text-sm transition-all duration-200 ${
+                                <button
+                                  onClick={() => {
+                                    navigate(sub.path);
+                                    setOpenDropdown(null);
+                                    setIsMobileOpen(false);
+                                  }}
+                                  className={`w-full text-left px-4 py-2 rounded-lg text-sm transition-all duration-200 ${
                                     location.pathname === sub.path
                                       ? "bg-cyan-500/20 text-cyan-300"
                                       : "text-gray-400 hover:text-white hover:bg-white/5"
                                   }`}
                                 >
                                   {sub.name}
-                                </motion.div>
-                              </button>
+                                </button>
+                              </motion.div>
                             ))}
                           </motion.div>
                         )}
